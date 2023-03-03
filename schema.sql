@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS artworks CASCADE;
+
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
@@ -9,7 +12,7 @@ CREATE TABLE artworks (
     id SERIAL PRIMARY KEY,
     title VARCHAR(50) NOT NULL,
     description TEXT,
-    image_url TEXT, 
+    file_img BYTEA, 
     user_id INT,
     CONSTRAINT fk_artworks_users
         FOREIGN KEY(user_id)
