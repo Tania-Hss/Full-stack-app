@@ -5,13 +5,7 @@
 {% endblock title %}
 
 {% block main %} 
-{% if user_name %}
-<form action="/logout" method="post">
-    <button type="submit">logout</button>
-</form>
-{% else %}
-<li><a href="/login">Login here</a></li>
-{% endif %}
+
 <div>
     {% for item in art_items %}
         <div>

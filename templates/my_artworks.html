@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+
+{% block title %}
+    Collection
+{% endblock title %}
+
+
+{% block main %}
+
+  {% if artworks %}
+  <ul>
+    {% for artwork in artworks %}
+      <li>
+        <h2>{{ artwork['title'] }}</h2>
+        <p>{{ artwork['description'] }}</p>
+        <img src="{{ artwork['file_img'] }}" alt="{{ artwork['title'] }}">
+        <a href="/edit?id={{ artwork['id'] }}&title={{ artwork['title'] }}&description={{ artwork['description'] }}&img={{ artwork['file_img'] }}">Edit</a>
+        <a href="/delete?id={{ artwork['id'] }}&title={{ artwork['title'] }}">Delete</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>You don't have any artworks<a href="/create">Create artwork</a></p>
+  {% endif %}
+  
+{% endblock main %}
+
