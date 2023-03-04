@@ -1,15 +1,41 @@
 from flask import Flask, render_template, request, redirect
 import psycopg2
+
 app = Flask(__name__)
 
-@app.route('/edit')
-def edit_artwork_details():
+
+@app.post('/edit_artwork_action')
+def edit_artwork():
+    db_connection = psycopg2.connect("dbname=art_gallary")
+    db_cursor = db_connection.cursor()
+
+    artwork_id = request.form['id']
+    artwork_title = request.form['title']
+    artwork_description = request.form['description']
+    artwork_img = request.form['file_img']
     
-    return render_template("edit_artwork.html")
+    db_cursor.execute("UPDATE artworks SET title = %s, description = %s, file_img = %s WHERE id = %s", [
+    artwork_title, artwork_description , artwork_img , artwork_id])
+    
+
+    db_connection.commit()
+    db_cursor.close()
+    db_connection.close()
+
+    return redirect('/')
+
+
+@app.route('/edit')
+def edit():
+    artwork_id = request.args.get('id')
+    artwork_title = request.args.get('title')
+    artwork_description = request.args.get('description')
+    artwork_img = request.args.get('img')
+    
+    return render_template("edit_artwork.html", artwork_id=artwork_id,artwork_title=artwork_title,artwork_description=artwork_description,artwork_img=artwork_img)
 
 @app.post('/delete_artwork_action')
-def delete_food_item():
-
+def delete_artwork():
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
 
@@ -24,16 +50,16 @@ def delete_food_item():
     return redirect('/')
 
 @app.route('/delete')
-def remove_food_item():
-    
+def delete():
     artwork_id = request.args.get('id')
     artwork_title = request.args.get('title')
+    
     return render_template("delete_artwork.html", artwork_id = artwork_id, artwork_title=artwork_title)
 
 
 
 @app.post('/add_artwork')
-def add_new_artwork():
+def create_artwork():
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
 
@@ -45,7 +71,7 @@ def add_new_artwork():
     }
 
     db_cursor.execute("INSERT INTO artworks(title, description, file_img, user_id) VALUES (%s, %s, %s, %s)", [
-                      art_item['title'], art_item['description'], art_item['file_img'], art_item['user_id']])
+    art_item['title'], art_item['description'], art_item['file_img'], art_item['user_id']])
     
 
     db_connection.commit()
@@ -56,7 +82,7 @@ def add_new_artwork():
 
 
 @app.route('/create')
-def create_new_artwork():
+def create():
     return render_template('add_artwork.html')
 
 
@@ -64,6 +90,7 @@ def create_new_artwork():
 def index():
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
+
     db_cursor.execute("SELECT id, title, description, file_img, user_id FROM artworks;")
     rows = db_cursor.fetchall()
     art_items = []

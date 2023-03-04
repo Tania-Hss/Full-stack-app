@@ -28,15 +28,12 @@
             <td><img class="img" src="{{ item.file_img }}" alt="{{ item.title }}"></td>
             <td>{{ item.description }} </td>
             <td>
-                <form method="GET" action="/delete">
-                    <input type="hidden" name="id" value="{{ item.id }}">
-                    <input type="hidden" name="title" value="{{ item.title }}">
-                    <button type="submit">Delete</button>
-                </form>
+                <a href="/delete?id={{ item['id'] }}&title={{ item['title'] }}">Delete</a>
             </td>
             <td>
-            
+                <a href="/edit?id={{ item['id'] }}&title={{ item['title'] }}&description={{ item['description'] }}&img={{ item['file_img'] }}">Edit</a>
             </td>
+               
         </tr>
         {% endfor %}
     </tbody>

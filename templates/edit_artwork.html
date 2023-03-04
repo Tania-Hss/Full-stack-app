@@ -2,10 +2,25 @@
 
 
 {% block title %}
-    Update Artwork
+    Edit Artwork
 {% endblock title %}
 
 
 {% block main %}
-    
+<form action="/edit_artwork_action" method="post">
+    <input type="hidden" name="id" value="{{ artwork_id }}"></input>
+    <p>
+      <label>Artwork Name</label>
+      <input name="title" type="text" value="{{ artwork_title }} "></input>
+    </p>
+    <p>
+      <label>Image </label>
+      <input name="file_img" type="text" value="{{ artwork_img }}"></input>
+    </p>
+    <p>
+      <label>description</label>
+      <input name="description" type="text" value="{{ artwork_description }}"></input>
+    </p>
+    <button type="submit">Update Artwork Item</button>
+  </form>
 {% endblock main %}
