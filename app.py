@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 import psycopg2
 app = Flask(__name__)
 
@@ -10,7 +10,22 @@ def add_new_artwork():
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
 
+    art_item = {
+        "title": request.form['title'],
+        "description": request.form['description'],
+        "file_img": request.form['file_img'],
+        "user_id": request.form['user_id']
+    }
 
+    db_cursor.execute("INSERT INTO artworks(title, description, file_img, user_id) VALUES (%s, %s, %s, %s)", [
+                      art_item['title'], art_item['description'], art_item['file_img'], art_item['user_id']])
+    
+
+    db_connection.commit()
+    db_cursor.close()
+    db_connection.close()
+
+    return redirect('/')
 
 
 @app.route('/create')
