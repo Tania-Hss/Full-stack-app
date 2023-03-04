@@ -2,6 +2,33 @@ from flask import Flask, render_template, request, redirect
 import psycopg2
 app = Flask(__name__)
 
+@app.route('/edit')
+def edit_artwork_details():
+    
+    return render_template("edit_artwork.html")
+
+@app.post('/delete_artwork_action')
+def delete_food_item():
+
+    db_connection = psycopg2.connect("dbname=art_gallary")
+    db_cursor = db_connection.cursor()
+
+    artwork_id = request.form['id']
+    
+    db_cursor.execute("DELETE FROM artworks WHERE id = %s", [artwork_id])
+    
+    db_connection.commit()
+    db_cursor.close()
+    db_connection.close()
+
+    return redirect('/')
+
+@app.route('/delete')
+def remove_food_item():
+    
+    artwork_id = request.args.get('id')
+    artwork_title = request.args.get('title')
+    return render_template("delete_artwork.html", artwork_id = artwork_id, artwork_title=artwork_title)
 
 
 

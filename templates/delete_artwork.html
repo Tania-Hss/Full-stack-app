@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Delete Artwork
+{% endblock title %}
+
+{% block main %}
+<form method="POST" action="/delete_artwork_action">
+    <input type="hidden" name="id" value="{{ artwork_id }}"></input>
+    <p>Are you sure you want to delete {{ artwork_title }} ?</p>
+    <button type="submit">Delete Artwork</button>
+</form>
+{% endblock main %}
