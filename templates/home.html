@@ -11,13 +11,13 @@
             id
         </th>
         <th>
-            title
+            Title
         </th>
         <th>
-            description
+            Image
         </th>
         <th>
-            image
+            Description
         </th>
     </thead>
     <tbody>
@@ -25,8 +25,8 @@
         <tr>
             <td>{{ item.id }} </td>
             <td>{{ item.title }} </td>
+            <td><img class="img" src="{{ item.file_img }}" alt="{{ item.title }}"></td>
             <td>{{ item.description }} </td>
-            <td>{{ item.file_img }}</td>
         </tr>
         {% endfor %}
     </tbody>

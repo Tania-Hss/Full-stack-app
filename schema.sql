@@ -12,7 +12,7 @@ CREATE TABLE artworks (
     id SERIAL PRIMARY KEY,
     title VARCHAR(50) NOT NULL,
     description TEXT,
-    file_img BYTEA, 
+    file_img TEXT, 
     user_id INT,
     CONSTRAINT fk_artworks_users
         FOREIGN KEY(user_id)

@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add Artwork
+{% endblock title %}
+   
+{% block main %}
+    <form method="POST" action="/add_artwork">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title"><br><br>
+        
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description"></textarea><br><br>
+
+        <label for="file_img">Image File:</label><br>
+        <input type="file" id="file_img" name="file_img"><br><br>
+
+        <label for="user_id">User ID:</label><br>
+        <input type="text" id="user_id" name="user_id"><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+{% endblock main %}
