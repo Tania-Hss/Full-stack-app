@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS artworks CASCADE;
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    email TEXT NOT NULL
+    email TEXT NOT NULL,
+    password_hash TEXT NOT NULL
 );
 
 

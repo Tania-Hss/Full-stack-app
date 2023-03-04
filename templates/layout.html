@@ -10,6 +10,17 @@
     </head>
     <body>
         <h1>Art Gallary</h1>
+        <nav>
+            <ul class="links">
+                {% if user_name %}
+                <span>Welcome {{user_name}}</span>
+                <li><a href="/">Home</a></li>
+                <li><a href="/create">Create New Artwork</a></li>
+               {% else %}
+                <span>Welcome Guest</span>
+                {% endif %}
+            </ul>
+        </nav>
         <main>
             {% block main %} {% endblock main %}
         </main>

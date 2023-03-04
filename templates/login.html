@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title%}
+Login Page
+{% endblock title%}
+
+
+{% block main %} 
+
+<form action="/login" method="post">
+    <label for="email">Enter email</label>
+    <input type="text" name="email"></input>
+    <input type="password" name="password"></input>
+
+    <button type="submit">Login</button>
+</form> 
+<a href="/signup">Don't have an account? Sign up! </a>
+{% endblock main %}

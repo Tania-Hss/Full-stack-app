@@ -6,9 +6,9 @@
 {% endblock title %}
 
 {% block main %}
-<form method="POST" action="/delete_artwork_action">
+<form method="POST" action="/delete">
     <input type="hidden" name="id" value="{{ artwork_id }}"></input>
-    <p>Are you sure you want to delete {{ artwork_title }} ?</p>
+    <p>Are you sure you want to delete artwork {{ artwork_title }} ?</p>
     <button type="submit">Delete Artwork</button>
 </form>
 {% endblock main %}

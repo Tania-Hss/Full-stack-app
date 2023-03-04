@@ -5,7 +5,7 @@ Add Artwork
 {% endblock title %}
    
 {% block main %}
-    <form method="POST" action="/add_artwork">
+    <form method="POST" action="/create">
         <label for="title">Title:</label><br>
         <input type="text" id="title" name="title"><br><br>
         
@@ -18,6 +18,6 @@ Add Artwork
         <label for="user_id">User ID:</label><br>
         <input type="text" id="user_id" name="user_id"><br><br>
 
-        <button type="submit" value="Submit">Add to my Gallary</button>
+        <button type="submit">Add to my list</button>
     </form>
 {% endblock main %}

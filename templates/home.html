@@ -5,37 +5,23 @@
 {% endblock title %}
 
 {% block main %} 
-<table>
-    <thead>
-        <th>
-            id
-        </th>
-        <th>
-            Title
-        </th>
-        <th>
-            Image
-        </th>
-        <th>
-            Description
-        </th>
-    </thead>
-    <tbody>
-        {% for item in art_items %}
-        <tr>
-            <td>{{ item.id }} </td>
-            <td>{{ item.title }} </td>
-            <td><img class="img" src="{{ item.file_img }}" alt="{{ item.title }}"></td>
-            <td>{{ item.description }} </td>
-            <td>
-                <a href="/delete?id={{ item['id'] }}&title={{ item['title'] }}">Delete</a>
-            </td>
-            <td>
-                <a href="/edit?id={{ item['id'] }}&title={{ item['title'] }}&description={{ item['description'] }}&img={{ item['file_img'] }}">Edit</a>
-            </td>
-               
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% if user_name %}
+<form action="/logout" method="post">
+    <button type="submit">logout</button>
+</form>
+{% else %}
+<li><a href="/login">Login here</a></li>
+{% endif %}
+<div>
+    {% for item in art_items %}
+        <div>
+            <img  src="{{ item.file_img }}" alt="{{ item.title }}">
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+            <a href="/edit?id={{ item.id }}&title={{ item.title }}&description={{ item.description }}&img={{ item.file_img }}">Edit</a>
+            <a href="/delete?id={{ item.id }}&title={{ item.title }}">Delete</a>
+        </div>
+    {% endfor %}
+</div>
 {% endblock main %}
+

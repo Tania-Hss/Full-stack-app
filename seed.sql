@@ -4,8 +4,8 @@ TRUNCATE TABLE users CASCADE;
 ALTER SEQUENCE artworks_id_seq RESTART WITH 1;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 
-INSERT INTO users (name, email) VALUES ('Tania', 'taniah@gmail.com');
-INSERT INTO users (name, email) VALUES ('Bob the builder','bob@acme.com');
+INSERT INTO users (name, email, password_hash) VALUES ('Tania', 'taniah@gmail.com', '');
+INSERT INTO users (name, email, password_hash) VALUES ('Bob the builder','bob@acme.com', '');
 
 
 INSERT INTO artworks(title, description, file_img, user_id) VALUES ('The Girl', 'The painting depicts two young girls sitting down and laughing together, their faces full of joy and merriment. They are both dressed in colorful dresses that add a playful and lively atmosphere to the scene. One girl has her hand over her mouth, as if trying to stifle her laughter, while the other girl throws her head back in a carefree manner, her laughter ringing out loud and clear.', 'https://images.unsplash.com/photo-1505377059067-e285a7bac49b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1752&q=80', 1 );
