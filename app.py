@@ -6,7 +6,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'in ye raze'
 
 
-
 @app.route('/my_artworks')
 def my_artworks():
     # Check if user is logged in 
@@ -15,10 +14,10 @@ def my_artworks():
     
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
-    # get all the artworks from the database that belong to the user 
+    # selects all the artworks from the database that belong to the user 
     db_cursor.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.file_img, artworks.user_id FROM artworks JOIN users ON artworks.user_id = users.id WHERE users.id = %s", [session['user_id']])
     rows = db_cursor.fetchall()
-
+    
     user_artwork = []
     for row in rows:
         user_artwork.append(
@@ -34,21 +33,22 @@ def my_artworks():
     db_cursor.close()
     db_connection.close()
 
-    
     return render_template('my_artworks.html', user_artwork = user_artwork , user_name = session.get('user_name'))
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    # accesses the signup page
     if request.method == 'GET':
         return render_template('signup.html')
-
+    # signup form is submitted and data from form is inserted into database
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
 
     name = request.form.get('name')
     email = request.form.get('email')
     password = request.form.get('password')
+    
     password_hash = generate_password_hash(password)
 
     db_cursor.execute('INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s)', 
@@ -71,23 +71,25 @@ def logout_user():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # accesses the login page
     if request.method == 'GET':
        return render_template('login.html',user_name = session.get('user_name'))
-
+    
     user_email = request.form.get('email')
     user_password = request.form.get('password')
     
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
 
-    
+    # selects all user data belonging to the users email
     db_cursor.execute('SELECT users.id, users.name, users.email, users.password_hash FROM users WHERE email = %s;', [user_email])
     result = db_cursor.fetchone()
 
     password_matches = check_password_hash(result[3], user_password)
+
     db_cursor.close()
     db_connection.close()
-    
+    # if password matches result is saved to session to identify user
     if password_matches:
         session['user_id'] = result[0]
         session['user_name'] = result[1]
@@ -99,6 +101,7 @@ def login():
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
+    # gets artwork information from query parameters
     if request.method == 'GET':
         artwork_id = request.args.get('id')
         artwork_title = request.args.get('title')
@@ -114,7 +117,8 @@ def edit():
     artwork_title = request.form['title']
     artwork_description = request.form['description']
     artwork_img = request.form['file_img']
-    
+
+    # updates artwork details from the form in the database
     db_cursor.execute("UPDATE artworks SET title = %s, description = %s, file_img = %s WHERE id = %s", (
     artwork_title, artwork_description , artwork_img , artwork_id))
     
@@ -128,6 +132,7 @@ def edit():
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
+    # gets id and title from query parameter
     if request.method == 'GET':
         artwork_id = request.args.get('id')
         artwork_title = request.args.get('title')
@@ -138,7 +143,7 @@ def delete():
     db_cursor = db_connection.cursor()
 
     artwork_id = request.form['id']
-    
+    # deletes the artwork where id is the form id
     db_cursor.execute("DELETE FROM artworks WHERE id = %s", [artwork_id])
     
     db_connection.commit()
@@ -152,10 +157,8 @@ def delete():
 @app.route('/create', methods=['GET', 'POST'])
 def create_artwork():
     if request.method == 'GET':
-        
         return render_template('add_artwork.html', user_name = session.get('user_name'))
-    
-        # Post request form data to add artwork to the user's collection
+
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
 
@@ -164,6 +167,7 @@ def create_artwork():
     file_img = request.form['file_img']
     user_id = session['user_id']
 
+    # add artwork to the artworks table
     db_cursor.execute('INSERT INTO artworks (title, description, file_img, user_id) VALUES (%s, %s, %s, %s)',
     (title, description, file_img, user_id))
     
@@ -179,7 +183,7 @@ def create_artwork():
 def index():
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
-
+    # selects all the artworks and their user names from the database
     db_cursor.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.file_img, artworks.user_id, users.name FROM artworks JOIN users ON artworks.user_id = users.id;")
     rows = db_cursor.fetchall()
     art_items = []

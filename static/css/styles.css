@@ -11,17 +11,55 @@ h1 {
     list-style: none;
     display: flex;
     justify-content: center;
+    
 }
 
-.links, li {
+/* .links form {
+    margin-left: 10px;
+} */
+
+.links li {
     margin: 0 25px;
 }
 
-.links, li, a {
+.links li a {
     text-decoration: none;
+  
 }
-
 img {
     width: 300px;
     height: 250px;
+}
+ 
+.art-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.art-item {
+    width: 350px;
+    margin: 20px;
+}
+
+.art-item img {
+    width: 100%;
+    height: auto;
+}
+
+.art-item a {
+    text-align: center;
+    margin: 10px;
+    padding: 5px 10px;
+    background-color: rgba(143, 155, 157, 0.44);
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+}
+
+nav form {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
