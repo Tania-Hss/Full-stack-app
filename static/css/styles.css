@@ -1,7 +1,5 @@
 body {
     font-family: sans-serif;
-    margin: 0;
-    padding: 0;
 }
 
 h1 {
@@ -12,12 +10,11 @@ h1 {
 .links {
     list-style: none;
     display: flex;
-    
+    justify-content: center;
 }
 
 .links, li {
-    margin-right: 25px;
-    margin-left: 80px;
+    margin: 0 25px;
 }
 
 .links, li, a {

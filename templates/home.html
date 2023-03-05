@@ -2,20 +2,24 @@
 
 {% block title %}
     home
-{% endblock title %}
+{% endblock %}
 
-{% block main %} 
-
-<div>
+{% block main %}
+<div class="art-items">
     {% for item in art_items %}
-        <div>
-            <img  src="{{ item.file_img }}" alt="{{ item.title }}">
+        <div class="art-item">
             <h2>{{ item.title }}</h2>
+            <img  src="{{ item.file_img }}" alt="{{ item.title }}">
+            <h4>Artwork by {{item.name}}</h4>
             <p>{{ item.description }}</p>
-            <a href="/edit?id={{ item.id }}&title={{ item.title }}&description={{ item.description }}&img={{ item.file_img }}">Edit</a>
-            <a href="/delete?id={{ item.id }}&title={{ item.title }}">Delete</a>
+            {% if 'user_id' in session %}
+                {% if item.user_id == session.get('user_id') %}
+                    <a href="/edit?id={{ item.id }}&title={{ item.title }}&description={{ item.description }}&img={{ item.file_img }}">Edit</a>
+                    <a href="/delete?id={{ item.id }}&title={{ item.title }}">Delete</a>
+                {% endif %}
+            {% endif %}
         </div>
     {% endfor %}
 </div>
-{% endblock main %}
+{% endblock %}
 

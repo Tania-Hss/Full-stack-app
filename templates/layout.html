@@ -13,12 +13,14 @@
         <nav>
             <ul class="links">
                 {% if user_name %}
-                <span>Welcome {{user_name}}</span>
                 <form action="/logout" method="post">
+                    <span>Welcome {{user_name}}</span>
                     <button type="submit">logout</button>
                 </form>
                 <li><a href="/">Home</a></li>
                 <li><a href="/create">Create New Artwork</a></li>
+                <li><a href="/my_artworks">My Collection</a></li>
+
                {% else %}
                 <span>Welcome Guest</span>
                 <li><a href="/login">Login here</a></li>

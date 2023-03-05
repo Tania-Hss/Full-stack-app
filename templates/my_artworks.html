@@ -8,20 +8,20 @@
 
 {% block main %}
 
-  {% if artworks %}
-  <ul>
-    {% for artwork in artworks %}
-      <li>
-        <h2>{{ artwork['title'] }}</h2>
-        <p>{{ artwork['description'] }}</p>
-        <img src="{{ artwork['file_img'] }}" alt="{{ artwork['title'] }}">
-        <a href="/edit?id={{ artwork['id'] }}&title={{ artwork['title'] }}&description={{ artwork['description'] }}&img={{ artwork['file_img'] }}">Edit</a>
-        <a href="/delete?id={{ artwork['id'] }}&title={{ artwork['title'] }}">Delete</a>
-      </li>
+  {% if user_artwork %}
+  <div>
+    {% for artwork in user_artwork %}
+      <div>
+        <h2>{{ artwork.title }}</h2>
+        <img src="{{ artwork.file_img }}" alt="{{ artwork.title }}">
+        <p>{{ artwork.description }}</p>
+        <p><a href="/edit?id={{ artwork.id }}&title={{ artwork.title }}&description={{ artwork.description }}&img={{ artwork.file_img }}">Edit</a></p>
+        <p><a href="/delete?id={{ artwork.id }}&title={{ artwork.title }}">Remove From Collection</a></p>
+      </div>
     {% endfor %}
-  </ul>
+  </div>
   {% else %}
-  <p>You don't have any artworks<a href="/create">Create artwork</a></p>
+  <p><a href="/create">Create artwork</a></p>
   {% endif %}
   
 {% endblock main %}
