@@ -1,5 +1,6 @@
 body {
     font-family: sans-serif;
+
 }
 
 h1 {
@@ -26,6 +27,7 @@ h1 {
     text-decoration: none;
   
 }
+
 img {
     width: 300px;
     height: 250px;
@@ -57,9 +59,20 @@ img {
     color: white;
     text-decoration: none;
 }
-
-nav form {
+/* logout form */
+.links form {
     position: absolute;
     top: 20px;
     right: 20px;
+}
+
+/* all forms */
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid ;
+    border-radius: 5px;
+
 }
