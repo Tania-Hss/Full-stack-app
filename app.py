@@ -5,6 +5,9 @@ from cloudinary import CloudinaryImage
 import cloudinary.uploader
 from psycopg2.extras import RealDictCursor
 
+
+from models.artworks import get_all_artworks, create_new_artwork, delete_artwork, edit_artwork
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'in ye raze'
 
@@ -124,34 +127,20 @@ def edit():
         artwork_title = request.args.get('title')
         artwork_description = request.args.get('description')
         artwork_img = request.args.get('img')
-    
-        return render_template("edit_artwork.html", artwork_id=artwork_id,artwork_title=artwork_title,artwork_description=artwork_description,artwork_img=artwork_img, user_name = session.get('user_name'))
-    
-    db_connection = psycopg2.connect("dbname=art_gallary")
-    db_cursor = db_connection.cursor()
+
+        return render_template("edit_artwork.html", artwork_id=artwork_id, artwork_title=artwork_title,
+                               artwork_description=artwork_description, artwork_img=artwork_img,
+                               user_name=session.get('user_name'))
 
     artwork_id = request.form['id']
     artwork_title = request.form['title']
     artwork_description = request.form['description']
     artwork_img = request.files.get('img')
-    # if image exits then upload to cloudinary 
-    if artwork_img:
-        uploaded_image = cloudinary.uploader.upload(artwork_img)
-        image_url = uploaded_image['url']
-    else:
-        # get the existing image from the database
-        db_cursor.execute("SELECT img_url FROM artworks WHERE id = %s", (artwork_id,))
-        image_url = db_cursor.fetchone()
 
-    # updates artwork details from the form in the database
-    db_cursor.execute("UPDATE artworks SET title = %s, description = %s, img_url = %s WHERE id = %s", (
-    artwork_title, artwork_description , image_url , artwork_id))
-
-    db_connection.commit()
-    db_cursor.close()
-    db_connection.close()
+    edit_artwork(artwork_id, artwork_title, artwork_description, artwork_img)
 
     return redirect('/my_artworks')
+
 
 
 @app.route('/delete', methods=['GET', 'POST'])
@@ -165,17 +154,9 @@ def delete():
 
         return render_template("delete_artwork.html", artwork_id = artwork_id, artwork_title=artwork_title, user_name = session.get('user_name'))
 
-    db_connection = psycopg2.connect("dbname=art_gallary")
-    db_cursor = db_connection.cursor()
-
     artwork_id = request.form['id']
-    # deletes the artwork where id is the form id
-    db_cursor.execute("DELETE FROM artworks WHERE id = %s", [artwork_id])
-    
-    db_connection.commit()
-    db_cursor.close()
-    db_connection.close()
 
+    delete_artwork(artwork_id)
     return redirect('/my_artworks') 
 
 
@@ -191,52 +172,19 @@ def create_artwork():
     if not request.files.get('img'):
         return render_template('add_artwork.html', error='No image file was selected', user_name = session.get('user_name') )
     
-    db_connection = psycopg2.connect("dbname=art_gallary")
-    db_cursor = db_connection.cursor()
-
     title = request.form['title']
     description = request.form['description']
     img = request.files.get('img')
     user_id = session['user_id']
 
-    uploaded_image = cloudinary.uploader.upload(img)
-    image_url = uploaded_image['url']
+    artwork = create_new_artwork(title, description, img, user_id)
 
-    # add artwork to the artworks table
-    db_cursor.execute('INSERT INTO artworks (title, description, img_url, user_id) VALUES (%s, %s, %s, %s)',
-    (title, description, image_url, user_id))
-    
-    db_connection.commit()
-    db_cursor.close()
-    db_connection.close()
-
-        
     return redirect('/my_artworks')
 
 
 @app.route('/')
 def index():
-    db_connection = psycopg2.connect("dbname=art_gallary")
-    db_cursor = db_connection.cursor()
-    # select all the artworks and their user names from the database
-    db_cursor.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.img_url, artworks.user_id, users.name FROM artworks JOIN users ON artworks.user_id = users.id;")
-    rows = db_cursor.fetchall()
-    art_items = []
-    for row in rows:
-        art_items.append(
-            {
-               "id": row[0],
-                "title": row[1],
-                "description": row[2],
-                "img_url": row[3],
-                "user_id": row[4],
-                "name": row[5]
-            }
-        )
-
-    db_cursor.close()
-    db_connection.close()
-    
+    art_items = get_all_artworks()
     return render_template("home.html", art_items=art_items, user_name = session.get('user_name'))
 
 if __name__ == "__main__":
