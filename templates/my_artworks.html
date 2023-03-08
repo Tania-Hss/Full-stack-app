@@ -13,9 +13,9 @@
     {% for artwork in user_artwork %}
       <div>
         <h2>{{ artwork.title }}</h2>
-        <img src="{{ artwork.file_img }}" alt="{{ artwork.title }}">
+        <img src="{{ artwork.img_url }}" alt="{{ artwork.title }}">
         <p>{{ artwork.description }}</p>
-        <p><a href="/edit?id={{ artwork.id }}&title={{ artwork.title }}&description={{ artwork.description }}&img={{ artwork.file_img }}">Edit</a></p>
+        <p><a href="/edit?id={{ artwork.id }}&title={{ artwork.title }}&description={{ artwork.description }}&img={{ artwork.img_url }}">Edit</a></p>
         <p><a href="/delete?id={{ artwork.id }}&title={{ artwork.title }}">Remove From Collection</a></p>
       </div>
     {% endfor %}

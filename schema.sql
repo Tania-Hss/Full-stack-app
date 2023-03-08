@@ -13,9 +13,14 @@ CREATE TABLE artworks (
     id SERIAL PRIMARY KEY,
     title VARCHAR(50) NOT NULL,
     description TEXT,
-    file_img TEXT, 
+    img_url TEXT, 
     user_id INT,
     CONSTRAINT fk_artworks_users
         FOREIGN KEY(user_id)
         REFERENCES users(id)
 );
+
+-- CREATE TABLE likes (
+--     id SERIAL PRIMARY KEY,
+
+-- )

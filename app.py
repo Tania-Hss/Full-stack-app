@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, session
 import psycopg2
 from werkzeug.security import generate_password_hash, check_password_hash
+from cloudinary import CloudinaryImage
+import cloudinary.uploader
+from psycopg2.extras import RealDictCursor
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'in ye raze'
@@ -14,8 +17,8 @@ def my_artworks():
     
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
-    # selects all the artworks from the database that belong to the user 
-    db_cursor.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.file_img, artworks.user_id FROM artworks JOIN users ON artworks.user_id = users.id WHERE users.id = %s", [session['user_id']])
+    # select all the artworks from the database that belong to the user 
+    db_cursor.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.img_url, artworks.user_id FROM artworks JOIN users ON artworks.user_id = users.id WHERE users.id = %s", [session['user_id']])
     rows = db_cursor.fetchall()
     
     user_artwork = []
@@ -25,7 +28,7 @@ def my_artworks():
                 'id': row[0],
                 'title': row[1],
                 'description': row[2],
-                'file_img': row[3],
+                'img_url': row[3],
                 'user_id': row[4]
             }
         )
@@ -48,7 +51,16 @@ def signup():
     name = request.form.get('name')
     email = request.form.get('email')
     password = request.form.get('password')
-    
+    # check to see if email already in database
+    db_cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
+    exists = db_cursor.fetchone()
+    if exists:
+        # if email already exists we pass error message
+        db_cursor.close()
+        db_connection.close()
+        error = 'Email already in use. Please use a different Email address.'
+        return render_template('signup.html', error=error)
+    # if email is new we define the password hash and insert (name, email, password_hash) in database
     password_hash = generate_password_hash(password)
 
     db_cursor.execute('INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s)', 
@@ -73,7 +85,7 @@ def logout_user():
 def login():
     # accesses the login page
     if request.method == 'GET':
-       return render_template('login.html',user_name = session.get('user_name'))
+       return render_template('login.html')
     
     user_email = request.form.get('email')
     user_password = request.form.get('password')
@@ -84,6 +96,9 @@ def login():
     # selects all user data belonging to the users email
     db_cursor.execute('SELECT users.id, users.name, users.email, users.password_hash FROM users WHERE email = %s;', [user_email])
     result = db_cursor.fetchone()
+    if result is None:
+        # If the email does not exist, redirect with an error message
+        return render_template('login.html', error='Invalid email or password')
 
     password_matches = check_password_hash(result[3], user_password)
 
@@ -96,11 +111,13 @@ def login():
         session['user_email'] = result[2]
         return redirect('/')
     else:
-        return redirect('/login')
+        return render_template('login.html', error='Invalid email or password')
 
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
+    if 'user_id' not in session:
+        return redirect('/login')
     # gets artwork information from query parameters
     if request.method == 'GET':
         artwork_id = request.args.get('id')
@@ -116,10 +133,10 @@ def edit():
     artwork_id = request.form['id']
     artwork_title = request.form['title']
     artwork_description = request.form['description']
-    artwork_img = request.form['file_img']
+    artwork_img = request.form['img_url']
 
     # updates artwork details from the form in the database
-    db_cursor.execute("UPDATE artworks SET title = %s, description = %s, file_img = %s WHERE id = %s", (
+    db_cursor.execute("UPDATE artworks SET title = %s, description = %s, img_url = %s WHERE id = %s", (
     artwork_title, artwork_description , artwork_img , artwork_id))
     
 
@@ -132,6 +149,8 @@ def edit():
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
+    if 'user_id' not in session:
+        return redirect('/login')
     # gets id and title from query parameter
     if request.method == 'GET':
         artwork_id = request.args.get('id')
@@ -156,6 +175,9 @@ def delete():
 
 @app.route('/create', methods=['GET', 'POST'])
 def create_artwork():
+    if 'user_id' not in session:
+        return redirect('/login')
+        
     if request.method == 'GET':
         return render_template('add_artwork.html', user_name = session.get('user_name'))
 
@@ -164,12 +186,15 @@ def create_artwork():
 
     title = request.form['title']
     description = request.form['description']
-    file_img = request.form['file_img']
+    img = request.files.get('img')
     user_id = session['user_id']
 
+    uploaded_image = cloudinary.uploader.upload(img)
+    image_url = uploaded_image['url']
+
     # add artwork to the artworks table
-    db_cursor.execute('INSERT INTO artworks (title, description, file_img, user_id) VALUES (%s, %s, %s, %s)',
-    (title, description, file_img, user_id))
+    db_cursor.execute('INSERT INTO artworks (title, description, img_url, user_id) VALUES (%s, %s, %s, %s)',
+    (title, description, image_url, user_id))
     
     db_connection.commit()
     db_cursor.close()
@@ -183,8 +208,8 @@ def create_artwork():
 def index():
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
-    # selects all the artworks and their user names from the database
-    db_cursor.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.file_img, artworks.user_id, users.name FROM artworks JOIN users ON artworks.user_id = users.id;")
+    # select all the artworks and their user names from the database
+    db_cursor.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.img_url, artworks.user_id, users.name FROM artworks JOIN users ON artworks.user_id = users.id;")
     rows = db_cursor.fetchall()
     art_items = []
     for row in rows:
@@ -193,7 +218,7 @@ def index():
                "id": row[0],
                 "title": row[1],
                 "description": row[2],
-                "file_img": row[3],
+                "img_url": row[3],
                 "user_id": row[4],
                 "name": row[5]
             }

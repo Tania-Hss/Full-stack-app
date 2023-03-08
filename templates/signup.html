@@ -17,6 +17,10 @@ Sign Up Page
     <input type="password" name="password"><br><br>
 
     <button type="submit">Signup</button>
-
+    {% if error %}
+        <div>
+            {{ error }}
+        </div>
+    {% endif %}
 </form>
 {% endblock main %}

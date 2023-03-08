@@ -15,8 +15,15 @@ Login Page
     <input type="password" name="password"></input><br><br>
 
     <button type="submit">Login</button>
+    <br>
+    {% if error %}
+        <div>
+            {{ error }}
+        </div>
+    {% endif %}
+    <br>
+    <li>
+        <a href="/signup">Don't have an account? Sign up! </a>
+    </li>
 </form>
-<li>
-    <a href="/signup">Don't have an account? Sign up! </a>
-</li> 
 {% endblock main %}
