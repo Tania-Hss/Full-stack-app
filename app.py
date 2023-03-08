@@ -133,12 +133,19 @@ def edit():
     artwork_id = request.form['id']
     artwork_title = request.form['title']
     artwork_description = request.form['description']
-    artwork_img = request.form['img_url']
-
+    artwork_img = request.files.get('img')
+    # if image exits then upload to cloudinary 
+    if artwork_img:
+        uploaded_image = cloudinary.uploader.upload(artwork_img)
+        image_url = uploaded_image['url']
+    else:
+        # get the existing image from the database
+        db_cursor.execute("SELECT img_url FROM artworks WHERE id = %s", (artwork_id,))
+        image_url = db_cursor.fetchone()
+    
     # updates artwork details from the form in the database
     db_cursor.execute("UPDATE artworks SET title = %s, description = %s, img_url = %s WHERE id = %s", (
-    artwork_title, artwork_description , artwork_img , artwork_id))
-    
+    artwork_title, artwork_description , image_url , artwork_id))
 
     db_connection.commit()
     db_cursor.close()
@@ -181,6 +188,9 @@ def create_artwork():
     if request.method == 'GET':
         return render_template('add_artwork.html', user_name = session.get('user_name'))
 
+    if not request.files.get('img'):
+        return render_template('add_artwork.html', error='No image file was selected')
+    
     db_connection = psycopg2.connect("dbname=art_gallary")
     db_cursor = db_connection.cursor()
 
