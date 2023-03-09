@@ -5,7 +5,6 @@ from flask import (
     request,
     session
 )
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from cloudinary import CloudinaryImage
 import cloudinary.uploader
