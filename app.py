@@ -9,11 +9,9 @@ from flask import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from cloudinary import CloudinaryImage
 import cloudinary.uploader
-# import psycopg2
-# from psycopg2.extras import RealDictCursor
 
 
-from models.artworks import get_all_artworks, create_new_artwork, delete_artwork, edit_artwork, get_user_artworks
+from models.artworks import get_all_artworks, insert_artwork, delete_artwork, edit_artwork, get_user_artwork
 from models.users import get_user_by_email, insert_user
 
 app = Flask(__name__)
@@ -26,7 +24,7 @@ def my_artworks():
     if 'user_id' not in session:
         return redirect('/login')
 
-    user_artwork = get_user_artworks(session['user_id'])
+    user_artwork = get_user_artwork(session['user_id'])
 
     return render_template('my_artworks.html', user_artwork = user_artwork , user_name = session.get('user_name'))
 
@@ -99,15 +97,15 @@ def edit():
         artwork_img = request.args.get('img')
 
         return render_template("edit_artwork.html", artwork_id=artwork_id, artwork_title=artwork_title,
-        artwork_description=artwork_description, artwork_img=artwork_img, user_name=session.get('user_name'))
+        artwork_description=artwork_description, artwork_img=artwork_img,
+        user_name=session.get('user_name'))
 
-    artwork_id = request.form['id']
-    artwork_title = request.form['title']
-    artwork_description = request.form['description']
-    artwork_img = request.files.get('img')
-
-    edit_artwork(artwork_id, artwork_title, artwork_description, artwork_img)
-
+    edit_artwork(
+        request.form['id'],
+        request.form['title'],
+        request.form['description'],
+        request.files.get('img')
+    )
     return redirect('/my_artworks')
 
 
@@ -119,12 +117,11 @@ def delete():
     if request.method == 'GET':
         artwork_id = request.args.get('id')
         artwork_title = request.args.get('title')
-
         return render_template("delete_artwork.html", artwork_id = artwork_id, artwork_title=artwork_title, user_name = session.get('user_name'))
 
-    artwork_id = request.form['id']
-
-    delete_artwork(artwork_id)
+    delete_artwork(
+        request.form['id']
+    )
     return redirect('/my_artworks') 
 
 
@@ -138,14 +135,13 @@ def create_artwork():
 
     if not request.files.get('img'):
         return render_template('add_artwork.html', error='No image file was selected', user_name = session.get('user_name') )
-    
-    title = request.form['title']
-    description = request.form['description']
-    img = request.files.get('img')
-    user_id = session['user_id']
 
-    artwork = create_new_artwork(title, description, img, user_id)
-
+    insert_artwork(
+        request.form['title'],
+        request.form['description'],
+        request.files.get('img'),
+        session['user_id']
+    )
     return redirect('/my_artworks')
 
 

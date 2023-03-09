@@ -4,31 +4,34 @@ from cloudinary import CloudinaryImage
 import cloudinary.uploader
 from flask import session 
 
+# import db
+
 def get_all_artworks():
     conn = psycopg2.connect("dbname=art_gallary")
     cur = conn.cursor(cursor_factory=RealDictCursor)
     # select all the artworks and their user names from the database
     cur.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.img_url, artworks.user_id, users.name FROM artworks JOIN users ON artworks.user_id = users.id;")
     rows = cur.fetchall()
-    art_items = []
-    for row in rows:
-        art_items.append(
-            {
-               "id": row["id"],
-                "title": row["title"],
-                "description": row["description"],
-                "img_url": row["img_url"],
-                "user_id": row["user_id"],
-                "name": row["name"]
-            }
-        )
+    # print(rows)
+    # art_items = []
+    # for row in rows:
+    #     art_items.append(
+    #         {
+    #            "id": row["id"],
+    #             "title": row["title"],
+    #             "description": row["description"],
+    #             "img_url": row["img_url"],
+    #             "user_id": row["user_id"],
+    #             "name": row["name"]
+    #         }
+    #     )
 
     cur.close()
     conn.close()
     
-    return art_items
+    return rows
 
-def create_new_artwork(title, description, img, user_id):
+def insert_artwork(title, description, img, user_id):
     conn = psycopg2.connect("dbname=art_gallary")
     cur = conn.cursor()
 
@@ -74,26 +77,26 @@ def edit_artwork(artwork_id, artwork_title, artwork_description, artwork_img):
     conn.close()
 
 
-def get_user_artworks(user_id):
+def get_user_artwork(user_id):
     conn = psycopg2.connect("dbname=art_gallary")
     cur = conn.cursor(cursor_factory=RealDictCursor)
     # select all the artworks from the database that belong to the user 
     cur.execute("SELECT artworks.id, artworks.title, artworks.description, artworks.img_url, artworks.user_id FROM artworks JOIN users ON artworks.user_id = users.id WHERE users.id = %s", [session['user_id']])
     rows = cur.fetchall()
 
-    user_artwork = []
-    for row in rows:
-        user_artwork.append(
-            {
-                'id': row['id'],
-                'title': row['title'],
-                'description': row['description'],
-                'img_url': row['img_url'],
-                'user_id': row['user_id']
-            }
-        )
-
+    # user_artwork = []
+    # for row in rows:
+    #     user_artwork.append(
+    #         {
+    #             'id': row['id'],
+    #             'title': row['title'],
+    #             'description': row['description'],
+    #             'img_url': row['img_url'],
+    #             'user_id': row['user_id']
+    #         }
+    #     )
+  
     cur.close()
     conn.close()
 
-    return user_artwork
+    return rows

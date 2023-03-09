@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import check_password_hash, generate_password_hash
 
+# import db
 
 def get_user_by_email(email):
     conn = psycopg2.connect("dbname=art_gallary")
