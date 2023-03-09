@@ -1,78 +1,129 @@
-body {
-    font-family: sans-serif;
 
+/* layout */
+body {
+    background-color: #f2f2f2;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
+    font-size: 48px;
     text-align: center;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
-.links {
+nav {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+}
+
+nav ul {
     list-style: none;
-    display: flex;
-    justify-content: center;
-    
-}
-
-/* .links form {
-    margin-left: 10px;
-} */
-
-.links li {
-    margin: 0 25px;
-}
-
-.links li a {
-    text-decoration: none;
-  
-}
-
-img {
-    width: 300px;
-    height: 250px;
-}
- 
-.art-items {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 50px;
-}
-
-.art-item {
-    width: 350px;
-    margin: 20px;
-}
-
-.art-item img {
-    width: 100%;
-    height: auto;
-}
-
-.art-item a {
+    margin: 0;
+    padding: 0;
     text-align: center;
-    margin: 10px;
-    padding: 5px 10px;
-    background-color: rgba(143, 155, 157, 0.44);
-    border-radius: 5px;
-    color: white;
-    text-decoration: none;
 }
-/* logout form */
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul li a {
+    color: #333;
+    display: block;
+    font-size: 20px;
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+nav ul li a:hover {
+    color: #f44336;
+}
+
 .links form {
     position: absolute;
     top: 20px;
     right: 20px;
 }
 
+.links span {
+    margin-right: 20px;
+}
+
+.layout_main {
+    margin: 30px auto;
+    max-width: 1000px;
+    padding: 0 20px;
+}
+
+/* all images */
+img{
+    display: block;
+    margin: 0 auto;
+    max-width: 50%;
+}
+
+
+
+/* home */
+.art-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+    margin-bottom: 30px;
+    padding: 20px;
+}
+
+.art-item:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.art-item h2 {
+    font-size: 30px;
+    margin: 0 0 10px;
+}
+
+.art-item h4 {
+    font-size: 20px;
+    margin: 10px 0 5px;
+
+}
+
+.art-item p {
+    font-size: 20px;
+    line-height: 1.5;
+    margin: 10px 0;
+}
+
+.art-item a {
+    /* display: block; */
+    text-align: center;
+    margin: 10px;
+    padding: 5px 10px;
+    background-color: rgba(143, 155, 157, 0.44);
+    border-radius: 5px;
+    color: black;
+    text-decoration: none;
+    transition: background-color 0.4s ease-in-out;
+}
+
+.art-item a:hover {
+    background-color: #f44336;
+} 
+
 /* all forms */
 
 form {
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid ;
+    border: 1px solid;
     border-radius: 5px;
-
+    
 }

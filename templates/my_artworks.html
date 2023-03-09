@@ -11,12 +11,12 @@
   {% if user_artwork %}
   <div>
     {% for artwork in user_artwork %}
-      <div>
+      <div class="art-item">
         <h2>{{ artwork.title }}</h2>
         <img src="{{ artwork.img_url }}" alt="{{ artwork.title }}">
         <p>{{ artwork.description }}</p>
-        <p><a href="/edit?id={{ artwork.id }}&title={{ artwork.title }}&description={{ artwork.description }}&img={{ artwork.img_url }}">Edit</a></p>
-        <p><a href="/delete?id={{ artwork.id }}&title={{ artwork.title }}">Remove From Collection</a></p>
+        <a href="/edit?id={{ artwork.id }}&title={{ artwork.title }}&description={{ artwork.description }}&img={{ artwork.img_url }}">Edit</a>
+        <a href="/delete?id={{ artwork.id }}&title={{ artwork.title }}">Remove From Collection</a>
       </div>
     {% endfor %}
   </div>

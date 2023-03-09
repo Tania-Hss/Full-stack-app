@@ -1,9 +1,16 @@
-from flask import Flask, render_template, request, redirect, session
-import psycopg2
+from flask import (
+    Flask,
+    redirect,
+    render_template,
+    request,
+    session
+)
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from cloudinary import CloudinaryImage
 import cloudinary.uploader
-from psycopg2.extras import RealDictCursor
+# import psycopg2
+# from psycopg2.extras import RealDictCursor
 
 
 from models.artworks import get_all_artworks, create_new_artwork, delete_artwork, edit_artwork, get_user_artworks
