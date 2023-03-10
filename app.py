@@ -8,13 +8,32 @@ from flask import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from cloudinary import CloudinaryImage
 import cloudinary.uploader
-
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 from models.artworks import get_all_artworks, insert_artwork, delete_artwork, edit_artwork, get_user_artwork
 from models.users import get_user_by_email, insert_user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'in ye raze'
+
+
+@app.route('/like', methods=['POST'])
+def like():
+    artwork_id = request.form['artwork_id']
+    # print("id:", artwork_id)
+    user_id = session.get('user_id')
+    print(f"user {user_id} liked artwork {artwork_id}")
+    if not user_id:
+        return redirect('/login')
+    db_connection = psycopg2.connect("dbname=art_gallary")
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("INSERT INTO likes (artwork_id, user_id) VALUES (%s, %s)", (artwork_id, user_id))
+
+    db_connection.commit()
+    db_cursor.close()
+    db_connection.close()
+    return redirect('/')
 
 
 @app.route('/my_artworks')

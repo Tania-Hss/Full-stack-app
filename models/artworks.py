@@ -8,7 +8,6 @@ import db
 
 def get_all_artworks():
     rows = db.select_all("SELECT artworks.id, artworks.title, artworks.description, artworks.img_url, artworks.user_id, users.name FROM artworks JOIN users ON artworks.user_id = users.id;")
-    
     return rows
 
 
@@ -36,13 +35,11 @@ def edit_artwork(artwork_id, artwork_title, artwork_description, artwork_img):
         db.insert("UPDATE artworks SET title = %s, description = %s, img_url = %s WHERE id = %s",
         (artwork_title, artwork_description, image_url, artwork_id))
     else:
-        # get the existing image from the database
         db.insert("UPDATE artworks SET title = %s, description = %s WHERE id = %s",
         (artwork_title, artwork_description, artwork_id))
-    # updates artwork details from the form in the database
+   
 
 
 def get_user_artwork(user_id):
     rows = db.select_user_artwork("SELECT artworks.id, artworks.title, artworks.description, artworks.img_url, artworks.user_id FROM artworks JOIN users ON artworks.user_id = users.id WHERE users.id = %s", [user_id])
-
     return rows

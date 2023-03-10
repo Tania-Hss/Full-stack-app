@@ -17,6 +17,10 @@
                     <a href="/edit?id={{ item.id }}&title={{ item.title }}&description={{ item.description }}&img={{ item.img_url }}">Edit</a>
                     <a href="/delete?id={{ item.id }}&title={{ item.title }}">Delete</a>
                 {% endif %}
+                <form method="POST" action="/like">
+                    <input type="hidden" name="artwork_id" value="{{ item.id }}">
+                    <button type="submit">Like</button>
+                </form>
             {% endif %}
         </div>
     {% endfor %}

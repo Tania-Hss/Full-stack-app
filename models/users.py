@@ -10,7 +10,6 @@ def get_user_by_email(email):
     return result
 
 def insert_user(name, email, password_hash):
-
     db.insert('INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s)', 
     (name, email, password_hash))
 

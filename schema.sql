@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS artworks CASCADE;
+DROP TABLE IF EXISTS likes CASCADE;
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
@@ -20,14 +21,14 @@ CREATE TABLE artworks (
         REFERENCES users(id)
 );
 
--- CREATE TABLE likes (
---     id SERIAL PRIMARY KEY,
---     user_id INT NOT NULL,
---     artwork_id INT NOT NULL,
---     CONSTRAINT fk_likes_users
---         FOREIGN KEY(user_id)
---         REFERENCES users(id),
---     CONSTRAINT fk_likes_artworks
---         FOREIGN KEY(artwork_id)
---         REFERENCES artworks(id)
--- );
+CREATE TABLE likes (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    artwork_id INT NOT NULL,
+    CONSTRAINT fk_likes_users
+        FOREIGN KEY(user_id)
+        REFERENCES users(id),
+    CONSTRAINT fk_likes_artworks
+        FOREIGN KEY(artwork_id)
+        REFERENCES artworks(id)
+);
