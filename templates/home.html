@@ -9,7 +9,7 @@
     {% for item in art_items %}
         <div class="art-item">
             <h2>{{ item.title }}</h2>
-            <img  src="{{ item.img_url }}" alt="{{ item.title }}">
+            <img src="{{ item.img_url }}" alt="{{ item.title }}">
             <h4>Artwork by {{item.name}}</h4>
             <p>{{ item.description }}</p>
             {% if 'user_id' in session %}
@@ -17,10 +17,6 @@
                     <a href="/edit?id={{ item.id }}&title={{ item.title }}&description={{ item.description }}&img={{ item.img_url }}">Edit</a>
                     <a href="/delete?id={{ item.id }}&title={{ item.title }}">Delete</a>
                 {% endif %}
-                <form method="POST" action="/like">
-                    <input type="hidden" name="artwork_id" value="{{ item.id }}">
-                    <button type="submit">Like</button>
-                </form>
             {% endif %}
         </div>
     {% endfor %}

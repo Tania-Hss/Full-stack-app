@@ -6,8 +6,9 @@ from flask import session
 
 import db
 
+
 def get_all_artworks():
-    rows = db.select_all("SELECT artworks.id, artworks.title, artworks.description, artworks.img_url, artworks.user_id, users.name FROM artworks JOIN users ON artworks.user_id = users.id;")
+    rows = db.select_all("SELECT artworks.*, users.name FROM artworks JOIN users ON artworks.user_id = users.id")
     return rows
 
 
